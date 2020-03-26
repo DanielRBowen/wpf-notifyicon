@@ -131,7 +131,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         /// pointer rather than a real window handler.<br/>
         /// Used at design time.
         /// </summary>
-        /// <returns>WindowMessageSink</returns>
+        /// <returns></returns>
         internal static WindowMessageSink CreateEmpty()
         {
             return new WindowMessageSink
@@ -169,7 +169,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
             wc.hIcon = IntPtr.Zero;
             wc.hCursor = IntPtr.Zero;
             wc.hbrBackground = IntPtr.Zero;
-            wc.lpszMenuName = string.Empty;
+            wc.lpszMenuName = "";
             wc.lpszClassName = WindowId;
 
             // Register the window class
@@ -185,7 +185,11 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
 
             if (MessageWindowHandle == IntPtr.Zero)
             {
+#if SILVERLIGHT
+      	throw new Exception("Message window handle was not a valid pointer.");
+#else
                 throw new Win32Exception("Message window handle was not a valid pointer");
+#endif
             }
         }
 
@@ -196,20 +200,20 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         /// <summary>
         /// Callback method that receives messages from the taskbar area.
         /// </summary>
-        private IntPtr OnWindowMessageReceived(IntPtr hWnd, uint messageId, IntPtr wParam, IntPtr lParam)
+        private IntPtr OnWindowMessageReceived(IntPtr hwnd, uint messageId, IntPtr wparam, IntPtr lparam)
         {
             if (messageId == taskbarRestartMessageId)
             {
                 //recreate the icon if the taskbar was restarted (e.g. due to Win Explorer shutdown)
                 var listener = TaskbarCreated;
-                listener?.Invoke();
+                if(listener != null) listener();
             }
 
             //forward message
-            ProcessWindowMessage(messageId, wParam, lParam);
+            ProcessWindowMessage(messageId, wparam, lparam);
 
             // Pass the message to the default window procedure
-            return WinApi.DefWindowProc(hWnd, messageId, wParam, lParam);
+            return WinApi.DefWindowProc(hwnd, messageId, wparam, lparam);
         }
 
 
@@ -225,89 +229,76 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         {
             if (msg != CallbackMessageId) return;
 
-            var message = (WindowsMessages) lParam.ToInt32();
-            Debug.WriteLine("Got message " + message);
-            switch (message)
+            switch (lParam.ToInt32())
             {
-                case WindowsMessages.WM_CONTEXTMENU:
-                    // TODO: Handle WM_CONTEXTMENU, see https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw
-                    Debug.WriteLine("Unhandled WM_CONTEXTMENU");
+                case 0x200:
+                    MouseEventReceived(MouseEvent.MouseMove);
                     break;
 
-                case WindowsMessages.WM_MOUSEMOVE:
-                    MouseEventReceived?.Invoke(MouseEvent.MouseMove);
+                case 0x201:
+                    MouseEventReceived(MouseEvent.IconLeftMouseDown);
                     break;
 
-                case WindowsMessages.WM_LBUTTONDOWN:
-                    MouseEventReceived?.Invoke(MouseEvent.IconLeftMouseDown);
-                    break;
-
-                case WindowsMessages.WM_LBUTTONUP:
+                case 0x202:
                     if (!isDoubleClick)
                     {
-                        MouseEventReceived?.Invoke(MouseEvent.IconLeftMouseUp);
+                        MouseEventReceived(MouseEvent.IconLeftMouseUp);
                     }
                     isDoubleClick = false;
                     break;
 
-                case WindowsMessages.WM_LBUTTONDBLCLK:
+                case 0x203:
                     isDoubleClick = true;
-                    MouseEventReceived?.Invoke(MouseEvent.IconDoubleClick);
+                    MouseEventReceived(MouseEvent.IconDoubleClick);
                     break;
 
-                case WindowsMessages.WM_RBUTTONDOWN:
-                    MouseEventReceived?.Invoke(MouseEvent.IconRightMouseDown);
+                case 0x204:
+                    MouseEventReceived(MouseEvent.IconRightMouseDown);
                     break;
 
-                case WindowsMessages.WM_RBUTTONUP:
-                    MouseEventReceived?.Invoke(MouseEvent.IconRightMouseUp);
+                case 0x205:
+                    MouseEventReceived(MouseEvent.IconRightMouseUp);
                     break;
 
-                case WindowsMessages.WM_RBUTTONDBLCLK:
+                case 0x206:
                     //double click with right mouse button - do not trigger event
                     break;
 
-                case WindowsMessages.WM_MBUTTONDOWN:
-                    MouseEventReceived?.Invoke(MouseEvent.IconMiddleMouseDown);
+                case 0x207:
+                    MouseEventReceived(MouseEvent.IconMiddleMouseDown);
                     break;
 
-                case WindowsMessages.WM_MBUTTONUP:
-                    MouseEventReceived?.Invoke(MouseEvent.IconMiddleMouseUp);
+                case 520:
+                    MouseEventReceived(MouseEvent.IconMiddleMouseUp);
                     break;
 
-                case WindowsMessages.WM_MBUTTONDBLCLK:
+                case 0x209:
                     //double click with middle mouse button - do not trigger event
                     break;
 
-                case WindowsMessages.NIN_BALLOONSHOW:
-                    BalloonToolTipChanged?.Invoke(true);
+                case 0x402:
+                    var listener = BalloonToolTipChanged;
+                    if (listener != null) listener(true);
                     break;
 
-                case WindowsMessages.NIN_BALLOONHIDE:
-                case WindowsMessages.NIN_BALLOONTIMEOUT:
-                    BalloonToolTipChanged?.Invoke(false);
+                case 0x403:
+                case 0x404:
+                    listener = BalloonToolTipChanged;
+                    if (listener != null) listener(false);
                     break;
 
-                case WindowsMessages.NIN_BALLOONUSERCLICK:
-                    MouseEventReceived?.Invoke(MouseEvent.BalloonToolTipClicked);
+                case 0x405:
+                    MouseEventReceived(MouseEvent.BalloonToolTipClicked);
                     break;
 
-                case WindowsMessages.NIN_POPUPOPEN:
-                    ChangeToolTipStateRequest?.Invoke(true);
+                case 0x406:
+                    listener = ChangeToolTipStateRequest;
+                    if (listener != null) listener(true);
                     break;
 
-                case WindowsMessages.NIN_POPUPCLOSE:
-                    ChangeToolTipStateRequest?.Invoke(false);
-                    break;
-
-                case WindowsMessages.NIN_SELECT:
-                    // TODO: Handle NIN_SELECT see https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw
-                    Debug.WriteLine("Unhandled NIN_SELECT");
-                    break;
-
-                case WindowsMessages.NIN_KEYSELECT:
-                    // TODO: Handle NIN_KEYSELECT see https://docs.microsoft.com/en-us/windows/win32/api/shellapi/nf-shellapi-shell_notifyiconw
-                    Debug.WriteLine("Unhandled NIN_KEYSELECT");
+                case 0x407:
+                    listener = ChangeToolTipStateRequest;
+                    if (listener != null) listener(false);
                     break;
 
                 default:
@@ -337,7 +328,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
             Dispose(true);
 
             // This object will be cleaned up by the Dispose method.
-            // Therefore, you should call GC.SuppressFinalize to
+            // Therefore, you should call GC.SupressFinalize to
             // take this object off the finalization queue 
             // and prevent finalization code for this object
             // from executing a second time.
@@ -349,7 +340,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         /// method does not get called. This gives this base class the
         /// opportunity to finalize.
         /// <para>
-        /// Important: Do not provide destructor in types derived from
+        /// Important: Do not provide destructors in types derived from
         /// this class.
         /// </para>
         /// </summary>
@@ -357,6 +348,7 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         {
             Dispose(false);
         }
+
 
         /// <summary>
         /// Removes the windows hook that receives window

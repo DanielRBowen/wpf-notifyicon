@@ -81,11 +81,11 @@ namespace Samples
         {
             ShowDialog(new DataBoundToolTipWindow());
         }
-		
-		private void btnMvvm_Click(object sender, RoutedEventArgs e)
-		{
-			ShowDialog(new MvvmSampleWindow());
-		}
+
+        private void btnMvvm_Click(object sender, RoutedEventArgs e)
+        {
+            ShowDialog(new MvvmSampleWindow());
+        }
 
         private void btnMainSample_Click(object sender, RoutedEventArgs e)
         {

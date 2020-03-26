@@ -52,7 +52,7 @@ namespace Windowless_Sample
         {
             get
             {
-                return new DelegateCommand {CommandAction = () => Application.Current.Shutdown()};
+                return new DelegateCommand { CommandAction = () => Application.Current.Shutdown() };
             }
         }
     }

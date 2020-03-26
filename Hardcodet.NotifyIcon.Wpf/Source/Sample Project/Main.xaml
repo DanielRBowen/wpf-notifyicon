@@ -8,8 +8,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d" ResizeMode="NoResize">
-    <Grid
-        Hyperlink.RequestNavigate="OnNavigationRequest">
+    <Grid Hyperlink.RequestNavigate="OnNavigationRequest">
         <Grid.Background>
             <LinearGradientBrush
                 EndPoint="0.673,0.95"
@@ -228,14 +227,14 @@
         	x:Name="btnMvvm"
         	Click="btnMvvm_Click" />
         <Image Margin="562.24,-19,-41.24,440" Source="Images/Logo.png" Stretch="Fill" RenderTransformOrigin="0.5,0.5" Opacity="0.235">
-        	<Image.RenderTransform>
-        		<TransformGroup>
-        			<ScaleTransform/>
-        			<SkewTransform/>
-        			<RotateTransform Angle="-34.915"/>
-        			<TranslateTransform/>
-        		</TransformGroup>
-        	</Image.RenderTransform>
+            <Image.RenderTransform>
+                <TransformGroup>
+                    <ScaleTransform/>
+                    <SkewTransform/>
+                    <RotateTransform Angle="-34.915"/>
+                    <TranslateTransform/>
+                </TransformGroup>
+            </Image.RenderTransform>
         </Image>
 
     </Grid>

@@ -14,7 +14,7 @@ namespace Samples
         /// The number of clicks on the popup button.
         /// </summary>
         public static readonly DependencyProperty ClickCountProperty =
-            DependencyProperty.Register(nameof(ClickCount),
+            DependencyProperty.Register("ClickCount",
                 typeof (int),
                 typeof (FancyPopup),
                 new FrameworkPropertyMetadata(0));

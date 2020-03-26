@@ -9,14 +9,14 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
     public class AppBarInfo
     {
         [DllImport("user32.dll")]
-        private static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+        private static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
 
         [DllImport("shell32.dll")]
-        private static extern uint SHAppBarMessage(uint dwMessage, ref APPBARDATA data);
+        private static extern UInt32 SHAppBarMessage(UInt32 dwMessage, ref APPBARDATA data);
 
         [DllImport("user32.dll")]
-        private static extern int SystemParametersInfo(uint uiAction, uint uiParam,
-            IntPtr pvParam, uint fWinIni);
+        private static extern Int32 SystemParametersInfo(UInt32 uiAction, UInt32 uiParam,
+            IntPtr pvParam, UInt32 fWinIni);
 
 
         private const int ABE_BOTTOM = 3;
@@ -27,13 +27,13 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         private const int ABM_GETTASKBARPOS = 0x00000005;
 
         // SystemParametersInfo constants
-        private const uint SPI_GETWORKAREA = 0x0030;
+        private const UInt32 SPI_GETWORKAREA = 0x0030;
 
         private APPBARDATA m_data;
 
         public ScreenEdge Edge
         {
-            get { return (ScreenEdge) m_data.uEdge; }
+            get { return (ScreenEdge)m_data.uEdge; }
         }
 
         public Rectangle WorkArea
@@ -44,18 +44,18 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         private Rectangle GetRectangle(RECT rc)
         {
             return new Rectangle(rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top);
-        }     
+        }
 
         public void GetPosition(string strClassName, string strWindowName)
         {
             m_data = new APPBARDATA();
-            m_data.cbSize = (uint) Marshal.SizeOf(m_data.GetType());
+            m_data.cbSize = (UInt32)Marshal.SizeOf(m_data.GetType());
 
             IntPtr hWnd = FindWindow(strClassName, strWindowName);
 
             if (hWnd != IntPtr.Zero)
             {
-                uint uResult = SHAppBarMessage(ABM_GETTASKBARPOS, ref m_data);
+                UInt32 uResult = SHAppBarMessage(ABM_GETTASKBARPOS, ref m_data);
 
                 if (uResult != 1)
                 {
@@ -88,22 +88,21 @@ namespace Hardcodet.Wpf.TaskbarNotification.Interop
         [StructLayout(LayoutKind.Sequential)]
         private struct APPBARDATA
         {
-            public uint cbSize;
+            public UInt32 cbSize;
             public IntPtr hWnd;
-            public uint uCallbackMessage;
-            public uint uEdge;
+            public UInt32 uCallbackMessage;
+            public UInt32 uEdge;
             public RECT rc;
-            public int lParam;
+            public Int32 lParam;
         }
-
 
         [StructLayout(LayoutKind.Sequential)]
         private struct RECT
         {
-            public int left;
-            public int top;
-            public int right;
-            public int bottom;
+            public Int32 left;
+            public Int32 top;
+            public Int32 right;
+            public Int32 bottom;
         }
     }
 }

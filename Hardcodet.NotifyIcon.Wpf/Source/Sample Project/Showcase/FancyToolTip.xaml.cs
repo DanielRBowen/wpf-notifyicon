@@ -1,4 +1,16 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
+using System.Windows.Shapes;
+using Hardcodet.Wpf.TaskbarNotification;
 
 namespace Samples
 {
@@ -13,10 +25,10 @@ namespace Samples
         /// The tooltip details.
         /// </summary>
         public static readonly DependencyProperty InfoTextProperty =
-            DependencyProperty.Register(nameof(InfoText),
+            DependencyProperty.Register("InfoText",
                 typeof (string),
                 typeof (FancyToolTip),
-                new FrameworkPropertyMetadata(string.Empty));
+                new FrameworkPropertyMetadata(""));
 
         /// <summary>
         /// A property wrapper for the <see cref="InfoTextProperty"/>
@@ -33,7 +45,7 @@ namespace Samples
 
         public FancyToolTip()
         {
-            InitializeComponent();
+            this.InitializeComponent();
         }
     }
 }

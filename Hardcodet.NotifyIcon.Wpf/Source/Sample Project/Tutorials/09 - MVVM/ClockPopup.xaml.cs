@@ -9,7 +9,7 @@ namespace Samples.Tutorials.MvvmSample
 	{
 		public ClockPopup()
 		{
-			InitializeComponent();
+			this.InitializeComponent();
 		}
 	}
 }

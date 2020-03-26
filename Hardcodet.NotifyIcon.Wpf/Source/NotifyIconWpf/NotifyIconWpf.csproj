@@ -1,27 +1,34 @@
-﻿<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
   <PropertyGroup>
-    <RootNamespace>Hardcodet.Wpf.TaskbarNotification</RootNamespace>
-    <AssemblyName>Hardcodet.Wpf.TaskbarNotification</AssemblyName>
-    <AssemblyTitle>NotifyIcon for WPF</AssemblyTitle>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Version>2.0.0</Version>
+    <Copyright>Copyright © Philipp Sumi 2013, Daniel Bowen 2020</Copyright>
+    <PackageId>Hardcodet.Wpf.TaskbarNotification.Core</PackageId>
+    <Authors>Hardcodet.Wpf.TaskbarNotification, CureDespair</Authors>
+    <PackageTags>Wpf, Hardcodet, Taskbar, Notification, TaskbarNotification, NotifyIcon</PackageTags>
+    <RepositoryUrl>https://github.com/DanielRBowen/ListToExcel</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/DanielRBowen/ListToExcel</PackageProjectUrl>
+    <LangVersion>8.0</LangVersion>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Title>TaskbarNotification</Title>
+    <PackageReleaseNotes>A fork of Hardcodet.Wpf.TaskbarNotification which is ported to .NET Core 3.1</PackageReleaseNotes>
+    <RepositoryType>git</RepositoryType>
     <Company>hardcodet.net</Company>
-    <Product>NotifyIcon WPF</Product>
+    <RepositoryUrl>https://github.com/DanielRBowen/wpf-notifyicon/tree/release/2.0.0</RepositoryUrl>
+    <PackageProjectUrl>http://www.hardcodet.net/wpf-notifyicon</PackageProjectUrl>
     <Description>NotifyIcon implementation for the WPF platform.</Description>
-    <Copyright>Copyright © Philipp Sumi 2013</Copyright>
-    <AssemblyVersion>1.0.8.0</AssemblyVersion>
-    <FileVersion>1.0.8.0</FileVersion>
-    <ExtrasEnableWpfProjectSetup>true</ExtrasEnableWpfProjectSetup>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <FileVersion>2.0.0.0</FileVersion>
   </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System.Xaml" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
+    <None Include="LICENSE.txt" Pack="true" PackagePath="$(PackageLicenseFile)"/>
   </ItemGroup>
+  
   <ItemGroup>
-    <None Include="Diagrams\TaskbarIcon Overview.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile DependentUpon="%(Filename)" SubType="Code" Update="**\obj\**\*.g$(DefaultLanguageSourceExtension)" />
-    <Compile DependentUpon="%(Filename)" SubType="Designer" Update="**\*.xaml$(DefaultLanguageSourceExtension)" />
-  </ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="4.7.0" />
+  </ItemGroup>  
 </Project>

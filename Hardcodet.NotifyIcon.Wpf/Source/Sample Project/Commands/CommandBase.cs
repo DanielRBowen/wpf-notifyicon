@@ -62,7 +62,7 @@ namespace Samples.Commands
         /// </param>
         public virtual bool CanExecute(object parameter)
         {
-            return !IsDesignMode;
+            return IsDesignMode ? false : true;
         }
 
 
@@ -82,12 +82,12 @@ namespace Samples.Commands
         /// Resolves the window that owns the TaskbarIcon class.
         /// </summary>
         /// <param name="commandParameter"></param>
-        /// <returns>Window</returns>
+        /// <returns></returns>
         protected Window GetTaskbarWindow(object commandParameter)
         {
             if (IsDesignMode) return null;
 
-            // get the showcase window off the taskbar icon
+            //get the showcase window off the taskbaricon
             var tb = commandParameter as TaskbarIcon;
             return tb == null ? null : TryFindParent<Window>(tb);
         }
@@ -97,13 +97,14 @@ namespace Samples.Commands
         /// <summary>
         /// Finds a parent of a given item on the visual tree.
         /// </summary>
-        /// <typeparam name="TParent">The type of the queried item.</typeparam>
+        /// <typeparam name="T">The type of the queried item.</typeparam>
         /// <param name="child">A direct or indirect child of the
         /// queried item.</param>
         /// <returns>The first parent item that matches the submitted
         /// type parameter. If not matching item can be found, a null
         /// reference is being returned.</returns>
-        public static TParent TryFindParent<TParent>(DependencyObject child) where TParent : DependencyObject
+        public static T TryFindParent<T>(DependencyObject child)
+            where T : DependencyObject
         {
             //get parent item
             DependencyObject parentObject = GetParentObject(child);
@@ -112,13 +113,16 @@ namespace Samples.Commands
             if (parentObject == null) return null;
 
             //check if the parent matches the type we're looking for
-            if (parentObject is TParent parent)
+            T parent = parentObject as T;
+            if (parent != null)
             {
                 return parent;
             }
-
-            //use recursion to proceed with next level
-            return TryFindParent<TParent>(parentObject);
+            else
+            {
+                //use recursion to proceed with next level
+                return TryFindParent<T>(parentObject);
+            }
         }
 
         /// <summary>
@@ -133,14 +137,15 @@ namespace Samples.Commands
         public static DependencyObject GetParentObject(DependencyObject child)
         {
             if (child == null) return null;
+            ContentElement contentElement = child as ContentElement;
 
-            if (child is ContentElement contentElement)
+            if (contentElement != null)
             {
                 DependencyObject parent = ContentOperations.GetParent(contentElement);
                 if (parent != null) return parent;
 
                 FrameworkContentElement fce = contentElement as FrameworkContentElement;
-                return fce?.Parent;
+                return fce != null ? fce.Parent : null;
             }
 
             //if it's not a ContentElement, rely on VisualTreeHelper

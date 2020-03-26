@@ -1,11 +1,12 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace Samples
 {
     /// <summary>
     /// Interaction logic for FancyPopup.xaml
     /// </summary>
-    public partial class FancyPopup
+    public partial class FancyPopup : UserControl
     {
         #region ClickCount dependency property
 
@@ -13,7 +14,7 @@ namespace Samples
         /// The number of clicks on the popup button.
         /// </summary>
         public static readonly DependencyProperty ClickCountProperty =
-            DependencyProperty.Register(nameof(ClickCount),
+            DependencyProperty.Register("ClickCount",
                 typeof (int),
                 typeof (FancyPopup),
                 new FrameworkPropertyMetadata(0));
@@ -33,7 +34,7 @@ namespace Samples
 
         public FancyPopup()
         {
-            InitializeComponent();
+            //InitializeComponent();
         }
 
         private void OnButtonClick(object sender, RoutedEventArgs e)

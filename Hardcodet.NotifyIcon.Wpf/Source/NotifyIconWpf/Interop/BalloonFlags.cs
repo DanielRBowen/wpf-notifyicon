@@ -1,5 +1,3 @@
-using System;
-
 namespace Hardcodet.Wpf.TaskbarNotification.Interop
 {
     /// <summary>
