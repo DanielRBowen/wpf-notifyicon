@@ -8,8 +8,6 @@
     <PackageId>Hardcodet.Wpf.TaskbarNotification.Core</PackageId>
     <Authors>Hardcodet.Wpf.TaskbarNotification, CureDespair</Authors>
     <PackageTags>Wpf, Hardcodet, Taskbar, Notification, TaskbarNotification, NotifyIcon</PackageTags>
-    <RepositoryUrl>https://github.com/DanielRBowen/ListToExcel</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/DanielRBowen/ListToExcel</PackageProjectUrl>
     <LangVersion>8.0</LangVersion>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
